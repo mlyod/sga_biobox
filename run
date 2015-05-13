@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -o errexit
+set -o xtrace
+set -o nounset
+
+# The first argument is the location of the reads in the container filesystem.
+# The will be present in a read-only directory
+READS=$2
+
+# The second argument is a directory with write-access where the final
+# assembly should be written to.
+DIR=$3
+
+# The assembly should be written to the file "contigs.fa" in the output directory
+ASSEMBLY=$DIR/contigs.fa
+
+CPU=$(nproc)
+
+# Setup logging
+LOG=$DIR/log.txt
+exec > >(tee ${LOG})
+exec 2>&1
+
+TMP_DIR=`mktemp -d`
+cd ${TMP_DIR}
+
+# Determine which process to run
+# CMD=$(egrep ^${PROC}: /Taskfile | cut -f 2 -d ':')#
+#if [[ -z ${CMD} ]]; then
+#  echo "Abort, no proc found for '${PROC}'."
+#  exit 1
+#fi
+#eval ${CMD}
+
+ASSEMBLE_OVERLAP=111
+TRIM_LENGTH=400
+
+sga preprocess --pe-mode 2 -o reads.pp.fastq ${READS}
+sga index -a ropebwt -t ${CPU} --no-reverse reads.pp.fastq
+sga correct -k ${KMER} --learn -t ${CPU} -o reads.ec.fastq reads.pp.fastq
+sga index -a ropebwt -t ${CPU} reads.ec.fastq
+sga filter -x 2 -t ${CPU} reads.ec.fastq
+sga overlap -m ${MIN_OVERLAP} -t ${CPU} reads.ec.filter.pass.fa
+sga assemble -m ${ASSEMBLE_OVERLAP} --min-branch-length ${TRIM_LENGTH} -o assembly reads.ec.filter.pass.asqg.gz
+
+cp assembly-contigs.fa ${ASSEMBLY}

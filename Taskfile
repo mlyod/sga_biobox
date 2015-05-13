@@ -1,0 +1,2 @@
+default: export KMER=21 && export MIN_OVERLAP=20 && run $READS /bbx/output
+careful: export KMER=41 && export MIN_OVERLAP=40
