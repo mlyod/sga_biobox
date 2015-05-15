@@ -6,7 +6,7 @@ set -o nounset
 
 # The first argument is the location of the reads in the container filesystem.
 # The will be present in a read-only directory
-READS=$2
+READS="$@"
 
 OUTPUT=/bbx/output
 
