@@ -8,19 +8,9 @@ set -o nounset
 # The will be present in a read-only directory
 READS=$2
 
-# The second argument is a directory with write-access where the final
-# assembly should be written to.
-DIR=$3
-
-# The assembly should be written to the file "contigs.fa" in the output directory
-ASSEMBLY=$DIR/contigs.fa
+OUTPUT=/bbx/output
 
 CPU=$(nproc)
-
-# Setup logging
-LOG=$DIR/log.txt
-exec > >(tee ${LOG})
-exec 2>&1
 
 TMP_DIR=`mktemp -d`
 cd ${TMP_DIR}
@@ -36,4 +26,4 @@ sga filter -x 2 -t ${CPU} reads.ec.fastq
 sga overlap -m ${MIN_OVERLAP} -t ${CPU} reads.ec.filter.pass.fa
 sga assemble -m ${ASSEMBLE_OVERLAP} --min-branch-length ${TRIM_LENGTH} -o assembly reads.ec.filter.pass.asqg.gz
 
-cp assembly-contigs.fa ${ASSEMBLY}
+mv assembly-contigs.fa ${OUTPUT}
