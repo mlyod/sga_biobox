@@ -40,8 +40,6 @@ fi
 # Eval evaluates a String as if you would use it on a command line.
 eval ${CMD}
 
-# cp ${TMP_DIR}/contigs.fa ${OUTPUT}
-
 # This command writes yaml into the biobox.yaml until the EOF symbol is reached
 cat << EOF > ${OUTPUT}/biobox.yaml
 version: 0.9.0

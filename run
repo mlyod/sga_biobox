@@ -25,14 +25,6 @@ exec 2>&1
 TMP_DIR=`mktemp -d`
 cd ${TMP_DIR}
 
-# Determine which process to run
-# CMD=$(egrep ^${PROC}: /Taskfile | cut -f 2 -d ':')#
-#if [[ -z ${CMD} ]]; then
-#  echo "Abort, no proc found for '${PROC}'."
-#  exit 1
-#fi
-#eval ${CMD}
-
 ASSEMBLE_OVERLAP=111
 TRIM_LENGTH=400
 
