@@ -22,7 +22,7 @@ mkdir -p ${OUTPUT}
 
 # Parse the read locations from this file
 READS=$(yaml2json < ${INPUT} \
-        | jq --raw-output '.arguments[] | select(has("fastq")) | .fastq[].value | "-short \(.)"' \
+        | jq --raw-output '.arguments[] | select(has("fastq")) | .fastq[].value ' \
         | tr '\n' ' ')
 
 #create temporary directory in /tmp
