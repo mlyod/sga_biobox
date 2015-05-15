@@ -65,9 +65,6 @@ RUN cd ${SGA_DIR} && \
     make install && \
     rm -rf ${SGA_DIR}
 
-
-
-
 ADD run /usr/local/bin/
 ADD assemble /usr/local/bin/
 ADD Taskfile /
